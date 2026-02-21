@@ -1,0 +1,67 @@
+services:
+  database:
+    image: mariadb:10.5
+    container_name: esgi-database
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - esgi-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "database", "-u", "esgiuser", "-pesgipassword"]
+      timeout: 5s
+      retries: 5
+    secrets:
+      - db_root_password
+      - db_password
+
+  esgi-backend:
+    image: jazzy99999/esgi-backend:latest
+    container_name: esgi-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      MYSQL_HOST: database
+    networks:
+      - esgi-network
+    depends_on:
+      database:
+        condition: service_healthy
+    secrets:
+      - db_password
+    volumes:
+      - ./start.sh:/app/start.sh
+    entrypoint: ["/bin/sh", "/app/start.sh"]
+    command: [""]
+
+  esgi-frontend:
+    image: jazzy99999/esgi-frontend:latest
+    container_name: esgi-frontend
+    ports:
+      - "80:80"
+    networks:
+      - esgi-network
+    depends_on:
+      - esgi-backend
+
+networks:
+  esgi-network:
+    driver: bridge
+
+volumes:
+  db_data:
+
+secrets:
+  db_root_password:
+    file: ./secrets/db_password
+  db_password:
+    file: ./secrets/db_password

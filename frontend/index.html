@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Ma Todolist Docker</title>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+        <h1 class="text-2xl font-bold mb-4 text-blue-600">Mes Tâches</h1>
+        <div class="flex mb-4">
+            <input id="taskInput" type="text" class="border p-2 w-full rounded-l" placeholder="Nouvelle tâche...">
+            <button onclick="addTask()" class="bg-blue-500 text-white p-2 rounded-r">Ajouter</button>
+        </div>
+        <ul id="taskList" class="space-y-2"></ul>
+    </div>
+
+    
+	<script>
+		async function fetchTasks() {
+			// On met l'adresse complète pour éviter d'avoir besoin d'un proxy Nginx
+			const res = await fetch('http://localhost:3000/tasks'); 
+			const tasks = await res.json();
+			document.getElementById('taskList').innerHTML = tasks.map(t => 
+				`<li class="bg-gray-50 p-2 rounded border">${t.title}</li>`).join('');
+		}
+
+		async function addTask() {
+			const title = document.getElementById('taskInput').value;
+			await fetch('http://localhost:3000/tasks', { // Idem ici
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify({title})
+			});
+			document.getElementById('taskInput').value = '';
+			fetchTasks();
+		}
+		fetchTasks();
+	</script>
+</body>
+</html>
