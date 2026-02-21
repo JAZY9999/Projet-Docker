@@ -1,6 +1,6 @@
 # esgi-docker-todolist
 
-Application Full Stack conteneurisée avec Docker Compose, réalisée dans le cadre du module de conteneurisation (ESGI — Romain Lenoir).
+Application Full Stack conteneurisée avec Docker Compose, réalisée dans le cadre du cours de conteneurisation docker (bases) (ESGI — Romain Lenoir).
 
 L'application est une TodoList 3-tiers : un frontend Nginx, une API Node.js/Express et une base de données MariaDB, orchestrés via Docker Compose et déployables sans code source.
 
