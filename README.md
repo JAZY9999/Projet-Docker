@@ -63,8 +63,8 @@ Ce fichier ne doit jamais être commité (il est dans le `.gitignore`).
 ### Option A — avec le code source
 
 ```bash
-git clone https://github.com/jazzy99999/esgi-docker-todolist
-cd esgi-docker-todolist
+git clone https://github.com/JAZY9999/Projet-Docker
+cd Projet-Docker
 docker compose up -d
 ```
 
@@ -172,3 +172,22 @@ docker compose down -v
 ## Docker Hub
 
 Images disponibles sur [hub.docker.com/u/jazzy99999](https://hub.docker.com/u/jazzy99999).
+
+
+---
+---
+
+## Mode Développement (Build & Push)
+
+Pour information, si le code source doit être re-compilé et les images mises à jour sur le registre :
+
+**Backend :**
+```bash
+docker build -t jazzy99999/esgi-backend:latest ./backend
+docker push jazzy99999/esgi-backend:latest
+
+**Frontend :**
+```bash
+docker build -t jazzy99999/esgi-frontend:latest ./frontend/
+docker push jazzy99999/esgi-frontend:latest
+
